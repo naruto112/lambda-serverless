@@ -1,0 +1,40 @@
+service: lambda-less
+
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'us-east-1'}
+  memorySize: 256
+  timeout: 3
+  environment:
+    bucket: lambda-less-shiftavalit
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - s3:GetObject
+            - s3:PutObject
+          Resource:
+            - "arn:aws:s3:::*"
+
+functions:
+  index:
+    handler: src/index.handler
+    description: Lambda de poc
+    events:
+      - httpApi:
+          path: /
+          method: get
+      - s3:
+          bucket: lambda-less-shiftavalit
+          event: s3:ObjectCreated:*
+          # rules:
+          #   - prefix: uploads/
+          #   - suffix: .png
+    destinations:
+      onSuccess: arn:aws:sqs:us-east-1:611069673104:destinationQueue
+      onFailure: arn:aws:sqs:us-east-1:611069673104:destinationQueue
