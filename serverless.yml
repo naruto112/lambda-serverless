@@ -35,6 +35,13 @@ functions:
           # rules:
           #   - prefix: uploads/
           #   - suffix: .png
-    destinations:
-      onSuccess: arn:aws:sqs:us-east-1:611069673104:destinationQueue
-      onFailure: arn:aws:sqs:us-east-1:611069673104:destinationQueue
+#     destinations:
+#       onSuccess: arn:aws:sns:${self:provider.region}:${aws:accountId}:DestinationQueue
+#       onFailure: arn:aws:sns:${self:provider.region}:${aws:accountId}:DestinationQueue
+
+# resources:
+#   Resources:
+#     DestinationQueue:
+#       Type: "AWS::SQS::Queue"
+#       Properties:
+#         QueueName: "DestinationQueue"
